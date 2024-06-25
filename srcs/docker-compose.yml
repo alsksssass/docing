@@ -1,6 +1,8 @@
 services:
   nginx:
     container_name: nginx
+    depends_on:
+      - wordpress
     build:
       context: ./requirements/nginx/
       dockerfile: Dockerfile
@@ -66,6 +68,16 @@ services:
     networks:
      - inception
     restart: on-failure
+  lighttpd:
+    container_name: lighttpd
+    build:
+      context: ./requirements/bonus/lighttpd/
+      dockerfile: Dockerfile
+    networks:
+      - inception
+    ports:
+      - 10000:10000
+    restart: on-failure
   ftp:
     container_name: ftp
     build:
@@ -81,20 +93,16 @@ services:
       - wp-wordpress:/var/lib/nginx/wordpress
     environment:
       FTP_PASSWORD: ${FTP_PASSWORD}
-  samba:
-    container_name: samba
+  poket:
+    container_name: poket
     build:
-      context: ./requirements/bonus/samba/
+      context: ./requirements/bonus/poket/
       dockerfile: Dockerfile
     networks:
      - inception
     ports:
-     - 445:445
+     - 12000:8000
     restart: on-failure
-    volumes:
-     - wp-wordpress:/var/lib/nginx/wordpress
-    environment:
-      SAMBA_PASSWORD: ${SAMBA_PASSWORD}
 
 networks:
   inception:
@@ -108,11 +116,11 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/sabyun/data/mariadb
+      device: /Users/byeonsanghun/data/mariadb
   wp-wordpress:
     name : wp-wordpress
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/sabyun/data/wordpress
+      device: /Users/byeonsanghun/data/wordpress

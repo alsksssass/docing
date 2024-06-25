@@ -40,4 +40,4 @@ fi
 chown -R wordpress:wordpress .
 chmod -R 755 .
 
-exec php-fpm81 -F;
+exec php-fpm82 -F;
